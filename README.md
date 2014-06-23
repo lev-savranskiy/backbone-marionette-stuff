@@ -6,7 +6,6 @@ I am beginner in this backbone-marionette so don`d judge ))
 
 First one- FileSubmit class for  Marionette.Layout
 
-It uses filereader so IE > 9 reqired http://caniuse.com/filereader
 
 
 
