@@ -1,0 +1,23 @@
+<div id='smfActions' class="sig-content">
+
+
+    <form class="addForm"
+          action="/javascripts/success.json"
+          enctype="multipart/form-data;"
+          method="POST">
+
+        <h2>SMF Actions</h2>
+        <h3>Select file to upload</h3>
+        <h4  class="addInformer">
+            <div  style="display: none;" class="alert-loading">
+                <img src="../images/loading.gif" />
+            </div>
+            <div style="display: none;" class="alert alert-success"></div>
+            <div style="display: none;" class="alert alert-error"></div>
+
+        </h4>
+
+        <input type="file" class="addInput" name="addInput"/>
+        <input type="submit"  value="Submit" class="addButton sig-button sig-button-icon sig-button-save" disabled="true"/>
+    </form>
+</div>
