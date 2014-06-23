@@ -9,7 +9,7 @@
  * - shows information about upload status
  *
  * WARNING
- * It uses FileReader API ==> IE > 9   required
+ * FileReader API used ==>  IE > 9   required
  * See http://caniuse.com/filereader for details
 
 
@@ -18,8 +18,8 @@
  <div>
 
  <form class="addForm"
- action="/javascripts/success.json"
- enctype="multipart/form-data; boundary=123"
+ action="/serverpath"
+ enctype="multipart/form-data;"
  method="POST">
 
  <h3>Select file to upload</h3>
