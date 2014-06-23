@@ -7,13 +7,13 @@
  * - shows information about upload status
  *
  * WARNING
- * It uses FileReader API so IE > 9 ==> required http://caniuse.com/filereader
+ * It uses FileReader API ==> IE > 9   required
+ * See http://caniuse.com/filereader for details
 
- 
+
  * Template example
 
  <div id='smfActions'>
-
 
  <form class="addForm"
  action="/javascripts/success.json"
@@ -51,52 +51,52 @@
 Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
 
 
-    initialize: function(){
+    initialize: function () {
         this.elId = "#" + this.id;
         this.addListenerToForm();
     },
 
-    getFileEl: function(){
-        return $(this.elId  + " .addInput");
+    getFileEl: function () {
+        return $(this.elId + " .addInput");
     },
-    getFilePath : function(){
+    getFilePath: function () {
         return this.getFileEl() ? this.getFileEl().val() : null;
     },
 
-    getFormEl : function(){
-        return  $(this.elId  + " .addForm");
+    getFormEl: function () {
+        return  $(this.elId + " .addForm");
 
     },
 
-    getBtnEl: function(){
-        return $(this.elId  + " .addButton");
+    getBtnEl: function () {
+        return $(this.elId + " .addButton");
     },
 
 
-    getInformer: function(status){
-        console.log(this.elId  + " .alert-" + status);
-        return $(this.elId  + " .alert-" + status);
+    getInformer: function (status) {
+        console.log(this.elId + " .alert-" + status);
+        return $(this.elId + " .alert-" + status);
     },
 
-    toggleButton: function(disabled){
+    toggleButton: function (disabled) {
         //console.log("toggleButton" , disabled);
-        if (this.getBtnEl()){
+        if (this.getBtnEl()) {
             this.getBtnEl().attr('disabled', disabled);
         }
     },
 
-    addHandler : function(e){
+    addHandler: function (e) {
         e.preventDefault();
         this.sendData();
     },
 
 
-    changeHandler : function(e){
+    changeHandler: function (e) {
         this.toggleButton(!this.getFilePath());
     },
 
 
-    addListenerToForm: function(){
+    addListenerToForm: function () {
 
         var vw = this;
 
@@ -109,8 +109,8 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
             }
 
             var file = {
-                dom    : dom[0],
-                binary : null
+                dom: dom[0],
+                binary: null
             };
             // We use the FileReader API to access our file content
             var reader = new FileReader();
@@ -122,13 +122,13 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
 
 
             // At page load, if a file is already selected, we read it.
-            if(file.dom.files[0]) {
+            if (file.dom.files[0]) {
                 reader.readAsBinaryString(file.dom.files[0]);
             }
 
             // However, we will read the file once the user selected it.
             file.dom.addEventListener("change", function () {
-                if(reader.readyState === FileReader.LOADING) {
+                if (reader.readyState === FileReader.LOADING) {
                     reader.abort();
                 }
 
@@ -142,17 +142,16 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
     },
 
 
-
-    showInfo: function(obj){
+    showInfo: function (obj) {
 
         var els = {};
         els.loading = this.getInformer("loading");
         els.error = this.getInformer("error");
         els.success = this.getInformer("success");
 
-        if (!els.loading || !els.error || !els.success){
+        if (!els.loading || !els.error || !els.success) {
             alert("ShowInfo not implemented!");
-        }else{
+        } else {
 
             els.loading.hide();
             els.error.hide();
@@ -163,30 +162,30 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
             var responseText = obj.XHR && obj.XHR.responseText;
 
 
-            if (responseText){
+            if (responseText) {
 
-                try{
+                try {
                     responseText = JSON.parse(responseText);
-                    console.log("responseText" , responseText);
+                    console.log("responseText", responseText);
 
-                    if (responseText.success === true){
+                    if (responseText.success === true) {
                         realStatus = "success";
                         text = "File was uploaded";
                     }
 
-                    if (responseText.message){
+                    if (responseText.message) {
                         text = responseText.message;
                     }
 
 
-                }catch(e){
+                } catch (e) {
                     text = "Server returned data in wrong format. JSON  expected."
                 }
             }
 
             var el = this.getInformer(realStatus);
 
-            if (el){
+            if (el) {
                 el.text(text);
                 el.show();
             }
@@ -195,11 +194,11 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
     },
 
 
-    sendData : function() {
+    sendData: function () {
 
 
         var vw = this;
-        var file  = this.file;
+        var file = this.file;
 
 
         this.showInfo({
@@ -209,20 +208,20 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
 
         // At first, if there is a file selected, we have to wait it is read
         // If it is not, we delay the execution of the function
-        if(!file.binary && file.dom.files.length > 0) {
+        if (!file.binary && file.dom.files.length > 0) {
             setTimeout(this.sendData, 10);
             return;
         }
 
         // To construct our multipart form data request,
         // We need an HMLHttpRequest instance
-        var XHR   = new XMLHttpRequest();
+        var XHR = new XMLHttpRequest();
 
         // We need a sperator to define each part of the request
         var boundary = "blob";
 
         // And we'll store our body request as a string.
-        var data  = "";
+        var data = "";
 
         // So, if the user has selected a file
         if (file.dom.files[0]) {
@@ -232,9 +231,9 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
             // We said it's form data (it could be something else)
             data += 'content-disposition: form-data; '
                 // We define the name of the form data
-                + 'name="'         + file.dom.name          + '"; '
+                + 'name="' + file.dom.name + '"; '
                 // We provide the real name of the file
-                + 'filename="'     + file.dom.files[0].name + '"\r\n';
+                + 'filename="' + file.dom.files[0].name + '"\r\n';
             // We provide the mime type of the file
             data += 'Content-Type: ' + file.dom.files[0].type + '\r\n';
 
@@ -261,7 +260,7 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
         data += "--" + boundary + "--";
 
         // We define what will happen if the data are successfully sent
-        XHR.addEventListener('load', function(event) {
+        XHR.addEventListener('load', function (event) {
 
             vw.showInfo({
                 status: "success",
@@ -270,7 +269,7 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
         });
 
         // We define what will happen in case of error
-        XHR.addEventListener('error', function(event) {
+        XHR.addEventListener('error', function (event) {
 
             vw.showInfo({
                 status: "error",
@@ -283,7 +282,7 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
 
 
         // We add the required HTTP header to handle a multipart form data POST request
-        XHR.setRequestHeader('Content-Type','multipart/form-data; boundary=' + boundary);
+        XHR.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
         //Refused to set unsafe header!
         // XHR.setRequestHeader('Content-Length', data.length);
 
