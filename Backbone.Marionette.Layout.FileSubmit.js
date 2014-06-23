@@ -1,5 +1,7 @@
 /***
  *
+ *  @link https://github.com/lev-savranskiy
+ *
  * FileSubmit class for  Marionette.Layout
  *
  * - enable/disabled submit button on file input change
