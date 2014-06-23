@@ -4,7 +4,10 @@
  *
  * - enable/disabled submit button on file input change
  * - submit form via XMLHttpRequest
- * - swos information about upload status
+ * - shows information about upload status
+ *
+ * WARNING
+ * It uses filereader so IE > 9 reqired http://caniuse.com/filereader
  *
  * Template example
  *
