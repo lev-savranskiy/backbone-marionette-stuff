@@ -15,14 +15,13 @@
 
  * Template example
 
- <div id='smfActions'>
+ <div>
 
  <form class="addForm"
  action="/javascripts/success.json"
  enctype="multipart/form-data; boundary=123"
  method="POST">
 
- <h2>SMF Actions</h2>
  <h3>Select file to upload</h3>
  <h4  class="addInformer">
  <div  style="display: none;" class="alert-loading">
@@ -53,30 +52,34 @@
 Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
 
 
-    initialize: function () {
+    onRender: function () {
         this.elId = "#" + this.id;
-        this.addListenerToForm();
+        var vw = this;
+
+        //todo get rid of setTimeout
+        setTimeout( function () {
+            vw.addListenerToForm();
+        });
+
     },
 
     getFileEl: function () {
         return $(this.elId + " .addInput");
     },
+
     getFilePath: function () {
         return this.getFileEl() ? this.getFileEl().val() : null;
     },
 
     getFormEl: function () {
         return  $(this.elId + " .addForm");
-
     },
 
     getBtnEl: function () {
         return $(this.elId + " .addButton");
     },
 
-
     getInformer: function (status) {
-        console.log(this.elId + " .alert-" + status);
         return $(this.elId + " .alert-" + status);
     },
 
@@ -100,47 +103,46 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
 
     addListenerToForm: function () {
 
+
+
         var vw = this;
 
-        window.addEventListener('load', function () {
 
-            var dom = vw.getFileEl();
+        var dom = vw.getFileEl();
 
-            if (!dom[0]) {
-                alert('No addInput found in HTML');
-            }
+        if (!dom[0]) {
+            alert('No addInput found in HTML');
+        }
 
-            var file = {
-                dom: dom[0],
-                binary: null
-            };
-            // We use the FileReader API to access our file content
-            var reader = new FileReader();
-            // Because de FileReader API is asynchronous, we need
-            // to store it's result when it has finish to read the file
-            reader.addEventListener("load", function () {
-                file.binary = reader.result;
-            });
-
-
-            // At page load, if a file is already selected, we read it.
-            if (file.dom.files[0]) {
-                reader.readAsBinaryString(file.dom.files[0]);
-            }
-
-            // However, we will read the file once the user selected it.
-            file.dom.addEventListener("change", function () {
-                if (reader.readyState === FileReader.LOADING) {
-                    reader.abort();
-                }
-
-                reader.readAsBinaryString(file.dom.files[0]);
-            });
-
-            vw.file = file;
-
-
+        var file = {
+            dom: dom[0],
+            binary: null
+        };
+        // We use the FileReader API to access our file content
+        var reader = new FileReader();
+        // Because de FileReader API is asynchronous, we need
+        // to store it's result when it has finish to read the file
+        reader.addEventListener("load", function () {
+            file.binary = reader.result;
         });
+
+
+        // At page load, if a file is already selected, we read it.
+        if (file.dom.files[0]) {
+            reader.readAsBinaryString(file.dom.files[0]);
+        }
+
+        // However, we will read the file once the user selected it.
+        file.dom.addEventListener("change", function () {
+            if (reader.readyState === FileReader.LOADING) {
+                reader.abort();
+            }
+
+            reader.readAsBinaryString(file.dom.files[0]);
+        });
+
+        vw.file = file;
+
     },
 
 
@@ -159,19 +161,19 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
             els.error.hide();
             els.success.hide();
 
-            var text = "Error happened";
-            var realStatus = "error";
+            var text = null;
+            var status =  obj.status;
             var responseText = obj.XHR && obj.XHR.responseText;
 
 
             if (responseText) {
-
+                 text = "Error happened";
                 try {
                     responseText = JSON.parse(responseText);
                     console.log("responseText", responseText);
 
                     if (responseText.success === true) {
-                        realStatus = "success";
+                        status = "success";
                         text = "File was uploaded";
                     }
 
@@ -181,14 +183,18 @@ Backbone.Marionette.Layout.FileSubmit = Backbone.Marionette.Layout.extend({
 
 
                 } catch (e) {
+                    status = "error";
                     text = "Server returned data in wrong format. JSON  expected."
                 }
             }
 
-            var el = this.getInformer(realStatus);
+            var el = this.getInformer(status);
 
             if (el) {
-                el.text(text);
+                if (text){
+                    el.text(text);
+                }
+
                 el.show();
             }
         }
