@@ -7,10 +7,11 @@
  * - shows information about upload status
  *
  * WARNING
- * It uses filereader so IE > 9 reqired http://caniuse.com/filereader
- *
+ * It uses FileReader API so IE > 9 ==> required http://caniuse.com/filereader
+
+ 
  * Template example
- *
+
  <div id='smfActions'>
 
 
